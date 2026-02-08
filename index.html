@@ -382,12 +382,6 @@
             <div class="auth-container">
                 <h2 style="text-align: center; margin-bottom: 30px;">Welcome</h2>
                 
-                <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 8px; padding: 15px; margin-bottom: 25px;">
-                    <h4 style="color: #065f46; margin-bottom: 8px;">🔑 Administrator Access</h4>
-                    <p style="font-size: 14px; color: #065f46; margin-bottom: 5px;"><strong>Email:</strong> admin@example.com</p>
-                    <p style="font-size: 14px; color: #065f46;"><strong>Password:</strong> admin123</p>
-                </div>
-                
                 <div id="loginForm">
                     <h3 style="margin-bottom: 20px;">Sign In</h3>
                     <div class="form-group">
@@ -462,11 +456,7 @@
                         </div>
                         <div class="form-group">
                             <label>Tournament</label>
-                            <select id="tournamentSelect">
-                                <option>Spring Championship 2026</option>
-                                <option>Summer Cup 2026</option>
-                                <option>Fall Classic 2026</option>
-                            </select>
+                            <select id="tournamentSelect"></select>
                         </div>
                         <div class="form-group">
                             <label>Skill Level</label>
@@ -516,17 +506,25 @@
                     <h3 style="margin-top: 30px; margin-bottom: 15px;">All Events</h3>
                     <div id="adminEvents"></div>
 
+                    <h3 style="margin-top: 30px; margin-bottom: 15px;">Tournament Management</h3>
+                    <button class="btn btn-primary" onclick="openTournamentModal()" style="margin-bottom: 20px;">🏆 Create New Tournament</button>
+                    <div id="adminTournaments"></div>
+
+                    <h3 style="margin-top: 30px; margin-bottom: 15px;">All Tournament Registrations</h3>
+                    <div id="allTournamentRegistrations"></div>
+
                     <h3 style="margin-top: 30px; margin-bottom: 15px;">User Management</h3>
                     <table>
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Password</th>
                                 <th>Current Role</th>
                                 <th>Volunteer Hours</th>
                                 <th>Events Signed Up</th>
-                                <th>Actions</th>
+                                <th>Tournaments Registered</th>
+                                <th>Change Role</th>
+                                <th>Reset Password</th>
                             </tr>
                         </thead>
                         <tbody id="usersTable"></tbody>
@@ -590,13 +588,45 @@
         </div>
     </div>
 
-    <script>
+    <!-- Tournament Modal -->
+    <div id="tournamentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Tournament</h2>
+                <button class="close-btn" onclick="closeTournamentModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Tournament Name</label>
+                <input type="text" id="newTournamentName" placeholder="e.g. Spring Championship 2026">
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="newTournamentDate">
+            </div>
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="newTournamentLocation" placeholder="Tournament venue">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="newTournamentDescription" rows="4" placeholder="Tournament details..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Registration Deadline</label>
+                <input type="date" id="newTournamentDeadline">
+            </div>
+            <button class="btn btn-success" onclick="createTournament()">Create Tournament</button>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Data Storage
         let currentUser = null;
         let users = JSON.parse(localStorage.getItem('users')) || [];
         let events = JSON.parse(localStorage.getItem('events')) || [];
         let articles = JSON.parse(localStorage.getItem('articles')) || [];
         let tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
+        let availableTournaments = JSON.parse(localStorage.getItem('availableTournaments')) || [];
 
         // Initialize with demo admin account
         if (users.length === 0) {
@@ -604,7 +634,7 @@
                 id: 1,
                 name: 'Admin User',
                 email: 'admin@example.com',
-                password: 'admin123',
+                password: 'Admin!2026@Secure#Volunteer',
                 role: 'administrator',
                 volunteerHours: 0,
                 signups: []
@@ -628,6 +658,10 @@
             localStorage.setItem('tournaments', JSON.stringify(tournaments));
         }
 
+        function saveAvailableTournaments() {
+            localStorage.setItem('availableTournaments', JSON.stringify(availableTournaments));
+        }
+
         // Authentication
         function showLogin() {
             document.getElementById('loginForm').classList.remove('hidden');
@@ -649,7 +683,7 @@
                 currentUser = user;
                 showMainApp();
             } else {
-                alert('Invalid credentials. Try admin@example.com / admin123');
+                alert('Invalid credentials. Check the admin credentials shown above the login form.');
             }
         }
 
@@ -907,7 +941,7 @@
         // Tournament Management
         function registerTournament() {
             const playerName = document.getElementById('playerName').value;
-            const tournament = document.getElementById('tournamentSelect').value;
+            const tournamentId = parseInt(document.getElementById('tournamentSelect').value);
             const skillLevel = document.getElementById('skillLevel').value;
 
             if (!playerName) {
@@ -915,11 +949,20 @@
                 return;
             }
 
+            if (!tournamentId) {
+                alert('Please select a tournament');
+                return;
+            }
+
+            const tournament = availableTournaments.find(t => t.id === tournamentId);
+
             tournaments.push({
                 id: tournaments.length + 1,
                 userId: currentUser.id,
+                userName: currentUser.name,
                 playerName,
-                tournament,
+                tournamentId: tournament.id,
+                tournamentName: tournament.name,
                 skillLevel,
                 registeredDate: new Date().toISOString()
             });
@@ -930,6 +973,17 @@
         }
 
         function loadTournaments() {
+            // Populate tournament dropdown
+            const tournamentSelect = document.getElementById('tournamentSelect');
+            if (availableTournaments.length === 0) {
+                tournamentSelect.innerHTML = '<option value="">No tournaments available</option>';
+            } else {
+                tournamentSelect.innerHTML = availableTournaments.map(t => 
+                    `<option value="${t.id}">${t.name} - ${new Date(t.date).toLocaleDateString()}</option>`
+                ).join('');
+            }
+
+            // Show user's registrations
             const myTournaments = document.getElementById('myTournaments');
             const userTournaments = tournaments.filter(t => t.userId === currentUser.id);
 
@@ -940,7 +994,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div>
-                                <div class="card-title">${t.tournament}</div>
+                                <div class="card-title">${t.tournamentName}</div>
                                 <div class="card-meta">Player: ${t.playerName} • Level: ${t.skillLevel}</div>
                             </div>
                         </div>
@@ -1000,22 +1054,95 @@
                         <p style="color: #10b981; margin-top: 10px;">
                             ${event.volunteers.length}/${event.volunteersNeeded} volunteers signed up
                         </p>
+                        ${event.volunteers.length > 0 ? `
+                            <details style="margin-top: 10px;">
+                                <summary style="cursor: pointer; color: #667eea; font-weight: 500;">View Volunteers</summary>
+                                <ul style="margin-top: 10px; padding-left: 20px;">
+                                    ${event.volunteers.map(vId => {
+                                        const volunteer = users.find(u => u.id === vId);
+                                        return `<li>${volunteer ? volunteer.name + ' (' + volunteer.email + ')' : 'Unknown'}</li>`;
+                                    }).join('')}
+                                </ul>
+                            </details>
+                        ` : ''}
                     </div>
                 `).join('');
+            }
+
+            // Load tournaments
+            const adminTournaments = document.getElementById('adminTournaments');
+            if (availableTournaments.length === 0) {
+                adminTournaments.innerHTML = '<p style="color: #64748b;">No tournaments created yet.</p>';
+            } else {
+                adminTournaments.innerHTML = availableTournaments.map(tournament => {
+                    const registrations = tournaments.filter(t => t.tournamentId === tournament.id);
+                    return `
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">${tournament.name}</div>
+                                <div class="card-meta">
+                                    ${new Date(tournament.date).toLocaleDateString()} • ${tournament.location}
+                                </div>
+                            </div>
+                            <button class="btn btn-danger" onclick="deleteTournament(${tournament.id})">Delete</button>
+                        </div>
+                        <p>${tournament.description}</p>
+                        <p style="color: #10b981; margin-top: 10px;">
+                            ${registrations.length} player${registrations.length !== 1 ? 's' : ''} registered
+                        </p>
+                        <p style="color: #64748b; font-size: 14px;">
+                            Registration deadline: ${new Date(tournament.deadline).toLocaleDateString()}
+                        </p>
+                    </div>
+                `;
+                }).join('');
+            }
+
+            // Load all tournament registrations
+            const allTournamentRegistrations = document.getElementById('allTournamentRegistrations');
+            if (tournaments.length === 0) {
+                allTournamentRegistrations.innerHTML = '<p style="color: #64748b;">No tournament registrations yet.</p>';
+            } else {
+                allTournamentRegistrations.innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Player Name</th>
+                                <th>Tournament</th>
+                                <th>Skill Level</th>
+                                <th>Registration Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tournaments.map(reg => `
+                                <tr>
+                                    <td>${reg.userName} (${users.find(u => u.id === reg.userId)?.email || 'N/A'})</td>
+                                    <td>${reg.playerName}</td>
+                                    <td>${reg.tournamentName}</td>
+                                    <td>${reg.skillLevel}</td>
+                                    <td>${new Date(reg.registeredDate).toLocaleDateString()}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
             }
 
             // Load users
             const usersTable = document.getElementById('usersTable');
             usersTable.innerHTML = users.map(user => {
                 const userEvents = events.filter(e => e.volunteers && e.volunteers.includes(user.id));
+                const userTournaments = tournaments.filter(t => t.userId === user.id);
                 return `
                 <tr>
                     <td>${user.name}</td>
                     <td>${user.email}</td>
-                    <td><code style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px;">${user.password}</code></td>
                     <td>${user.role}</td>
                     <td>${user.volunteerHours || 0} hours</td>
                     <td>${userEvents.length} events</td>
+                    <td>${userTournaments.length} tournaments</td>
                     <td>
                         <select onchange="changeUserRole(${user.id}, this.value)" ${user.id === currentUser.id ? 'disabled' : ''}>
                             <option value="volunteer" ${user.role === 'volunteer' ? 'selected' : ''}>Volunteer</option>
@@ -1023,9 +1150,75 @@
                             <option value="administrator" ${user.role === 'administrator' ? 'selected' : ''}>Administrator</option>
                         </select>
                     </td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="resetUserPassword(${user.id})" style="padding: 6px 12px; font-size: 12px;">Reset</button>
+                    </td>
                 </tr>
             `;
             }).join('');
+        }
+
+        function resetUserPassword(userId) {
+            const newPassword = prompt('Enter new password for this user:');
+            if (newPassword && newPassword.length >= 6) {
+                const user = users.find(u => u.id === userId);
+                user.password = newPassword;
+                saveUsers();
+                alert(`Password updated successfully!\n\nNew password: ${newPassword}\n\nPlease share this with the user securely.`);
+            } else if (newPassword !== null) {
+                alert('Password must be at least 6 characters long.');
+            }
+        }
+
+        function openTournamentModal() {
+            document.getElementById('tournamentModal').classList.add('active');
+        }
+
+        function closeTournamentModal() {
+            document.getElementById('tournamentModal').classList.remove('active');
+            document.getElementById('newTournamentName').value = '';
+            document.getElementById('newTournamentDate').value = '';
+            document.getElementById('newTournamentLocation').value = '';
+            document.getElementById('newTournamentDescription').value = '';
+            document.getElementById('newTournamentDeadline').value = '';
+        }
+
+        function createTournament() {
+            const name = document.getElementById('newTournamentName').value;
+            const date = document.getElementById('newTournamentDate').value;
+            const location = document.getElementById('newTournamentLocation').value;
+            const description = document.getElementById('newTournamentDescription').value;
+            const deadline = document.getElementById('newTournamentDeadline').value;
+
+            if (!name || !date || !location || !deadline) {
+                alert('Please fill all required fields');
+                return;
+            }
+
+            availableTournaments.push({
+                id: availableTournaments.length + 1,
+                name,
+                date,
+                location,
+                description,
+                deadline,
+                createdBy: currentUser.id
+            });
+
+            saveAvailableTournaments();
+            closeTournamentModal();
+            alert('Tournament created successfully!');
+            loadAdminDashboard();
+        }
+
+        function deleteTournament(tournamentId) {
+            if (confirm('Are you sure you want to delete this tournament? This will also delete all registrations.')) {
+                availableTournaments = availableTournaments.filter(t => t.id !== tournamentId);
+                tournaments = tournaments.filter(t => t.tournamentId !== tournamentId);
+                saveAvailableTournaments();
+                saveTournaments();
+                loadAdminDashboard();
+            }
         }
 
         function openEventModal() {
@@ -1124,7 +1317,21 @@
                 ];
                 saveArticles();
             }
-        };
-    </script>
-</body>
-</html>
+
+            if (availableTournaments.length === 0) {
+                availableTournaments = [
+                    {
+                        id: 1,
+                        name: 'Spring Championship 2026',
+                        date: '2026-04-15',
+                        location: 'Main Arena',
+                        description: 'Annual spring tournament featuring all skill levels',
+                        deadline: '2026-04-01',
+                        createdBy: 1
+                    },
+                    {
+                        id: 2,
+                        name: 'Summer Cup 2026',
+                        date: '2026-07-20',
+                        location: 'Sports Complex',
+                        description: 'Summer tournament with prizes for top performers
