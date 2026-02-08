@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Version 2.0 - Security Update -->
     <title>Volunteer & Tournament Management System</title>
     <style>
         * {
@@ -136,7 +135,6 @@
             display: none !important;
         }
 
-        /* Auth Forms */
         .auth-container {
             max-width: 400px;
             margin: 50px auto;
@@ -168,7 +166,6 @@
             border-color: #667eea;
         }
 
-        /* Cards */
         .card {
             background: white;
             border: 1px solid #e2e8f0;
@@ -208,7 +205,6 @@
             margin-top: 15px;
         }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -235,7 +231,6 @@
             opacity: 0.9;
         }
 
-        /* Event List */
         .event-item {
             display: flex;
             justify-content: space-between;
@@ -257,7 +252,6 @@
             color: #64748b;
         }
 
-        /* Table */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -280,7 +274,6 @@
             background: #f8fafc;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -328,22 +321,6 @@
             color: #64748b;
         }
 
-        .alert {
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
         .volunteer-schedule-item {
             background: #f0fdf4;
             border-left: 4px solid #10b981;
@@ -372,13 +349,11 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <h1>🎯 Volunteer & Tournament Hub</h1>
             <div class="user-info" id="userInfo"></div>
         </div>
 
-        <!-- Login/Register Screen -->
         <div id="authScreen">
             <div class="auth-container">
                 <h2 style="text-align: center; margin-bottom: 30px;">Welcome</h2>
@@ -421,215 +396,18 @@
             </div>
         </div>
 
-        <!-- Main App -->
         <div id="mainApp" class="hidden">
-            <!-- Navigation Tabs -->
             <div class="nav-tabs" id="navTabs"></div>
-
-            <!-- Content Area -->
-            <div class="content">
-                <!-- Events & News Tab (Viewers) -->
-                <div id="eventsNewsTab" class="tab-content hidden">
-                    <h2>Latest News & Events</h2>
-                    <div id="articlesList"></div>
-                </div>
-
-                <!-- Volunteer Dashboard -->
-                <div id="volunteerDashboardTab" class="tab-content hidden">
-                    <h2>My Volunteer Dashboard</h2>
-                    <div class="stats-grid" id="volunteerStats"></div>
-                    
-                    <h3 style="margin-top: 30px; margin-bottom: 15px;">My Schedule</h3>
-                    <div id="mySchedule"></div>
-
-                    <h3 style="margin-top: 30px; margin-bottom: 15px;">Available Opportunities</h3>
-                    <div id="availableEvents"></div>
-                </div>
-
-                <!-- Tournament Registration -->
-                <div id="tournamentTab" class="tab-content hidden">
-                    <h2>Tournament Registration</h2>
-                    <div class="card">
-                        <h3>Register for Tournament</h3>
-                        <div class="form-group">
-                            <label>Player Name</label>
-                            <input type="text" id="playerName" placeholder="Enter player name">
-                        </div>
-                        <div class="form-group">
-                            <label>Tournament</label>
-                            <select id="tournamentSelect"></select>
-                        </div>
-                        <div class="form-group">
-                            <label>Skill Level</label>
-                            <select id="skillLevel">
-                                <option>Beginner</option>
-                                <option>Intermediate</option>
-                                <option>Advanced</option>
-                                <option>Expert</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-success" onclick="registerTournament()">Register</button>
-                    </div>
-
-                    <h3 style="margin-top: 30px; margin-bottom: 15px;">My Registrations</h3>
-                    <div id="myTournaments"></div>
-                </div>
-
-                <!-- Writer Dashboard -->
-                <div id="writerTab" class="tab-content hidden">
-                    <h2>Writer Dashboard</h2>
-                    <button class="btn btn-primary" onclick="openArticleModal()" style="margin-bottom: 20px;">✏️ Write New Article</button>
-                    <h3>My Articles</h3>
-                    <div id="myArticles"></div>
-                </div>
-
-                <!-- Admin Dashboard -->
-                <div id="adminTab" class="tab-content hidden">
-                    <h2>Administrator Dashboard</h2>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalUsers">0</div>
-                            <div class="stat-label">Total Users</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalEvents">0</div>
-                            <div class="stat-label">Active Events</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="totalArticles">0</div>
-                            <div class="stat-label">Published Articles</div>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary" onclick="openEventModal()" style="margin-bottom: 20px;">➕ Create Volunteer Event</button>
-                    
-                    <h3 style="margin-top: 30px; margin-bottom: 15px;">All Events</h3>
-                    <div id="adminEvents"></div>
-
-                    <h3 style="margin-top: 30px; margin-bottom: 15px;">Tournament Management</h3>
-                    <button class="btn btn-primary" onclick="openTournamentModal()" style="margin-bottom: 20px;">🏆 Create New Tournament</button>
-                    <div id="adminTournaments"></div>
-
-                    <h3 style="margin-top: 30px; margin-bottom: 15px;">All Tournament Registrations</h3>
-                    <div id="allTournamentRegistrations"></div>
-
-                    <h3 style="margin-top: 30px; margin-bottom: 15px;">User Management</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Current Role</th>
-                                <th>Volunteer Hours</th>
-                                <th>Events Signed Up</th>
-                                <th>Tournaments Registered</th>
-                                <th>Change Role</th>
-                                <th>Reset Password</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usersTable"></tbody>
-                    </table>
-                </div>
-            </div>
+            <div class="content" id="contentArea"></div>
         </div>
     </div>
 
-    <!-- Article Modal -->
-    <div id="articleModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Write Article</h2>
-                <button class="close-btn" onclick="closeArticleModal()">&times;</button>
-            </div>
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" id="articleTitle" placeholder="Article title">
-            </div>
-            <div class="form-group">
-                <label>Content</label>
-                <textarea id="articleContent" rows="10" placeholder="Write your article here..."></textarea>
-            </div>
-            <button class="btn btn-success" onclick="publishArticle()">Publish Article</button>
-        </div>
-    </div>
-
-    <!-- Event Modal -->
-    <div id="eventModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Create Volunteer Event</h2>
-                <button class="close-btn" onclick="closeEventModal()">&times;</button>
-            </div>
-            <div class="form-group">
-                <label>Event Title</label>
-                <input type="text" id="eventTitle" placeholder="Event name">
-            </div>
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="eventDate">
-            </div>
-            <div class="form-group">
-                <label>Time</label>
-                <input type="time" id="eventTime">
-            </div>
-            <div class="form-group">
-                <label>Location</label>
-                <input type="text" id="eventLocation" placeholder="Event location">
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="eventDescription" rows="4" placeholder="Event details"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Volunteers Needed</label>
-                <input type="number" id="volunteersNeeded" min="1" value="5">
-            </div>
-            <button class="btn btn-success" onclick="createEvent()">Create Event</button>
-        </div>
-    </div>
-
-    <!-- Tournament Modal -->
-    <div id="tournamentModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Create Tournament</h2>
-                <button class="close-btn" onclick="closeTournamentModal()">&times;</button>
-            </div>
-            <div class="form-group">
-                <label>Tournament Name</label>
-                <input type="text" id="newTournamentName" placeholder="e.g. Spring Championship 2026">
-            </div>
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="newTournamentDate">
-            </div>
-            <div class="form-group">
-                <label>Location</label>
-                <input type="text" id="newTournamentLocation" placeholder="Tournament venue">
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="newTournamentDescription" rows="4" placeholder="Tournament details..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Registration Deadline</label>
-                <input type="date" id="newTournamentDeadline">
-            </div>
-            <button class="btn btn-success" onclick="createTournament()">Create Tournament</button>
-        </div>
-    </div>
-
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // Data Storage
+    <script>
         let currentUser = null;
         let users = JSON.parse(localStorage.getItem('users')) || [];
         let events = JSON.parse(localStorage.getItem('events')) || [];
         let articles = JSON.parse(localStorage.getItem('articles')) || [];
-        let tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
-        let availableTournaments = JSON.parse(localStorage.getItem('availableTournaments')) || [];
 
-        // Initialize with demo admin account
         if (users.length === 0) {
             users.push({
                 id: 1,
@@ -637,33 +415,37 @@
                 email: 'admin@example.com',
                 password: 'Admin!2026@Secure#Volunteer',
                 role: 'administrator',
-                volunteerHours: 0,
-                signups: []
+                volunteerHours: 0
             });
-            saveUsers();
-        }
-
-        function saveUsers() {
             localStorage.setItem('users', JSON.stringify(users));
         }
 
-        function saveEvents() {
+        if (events.length === 0) {
+            events = [{
+                id: 1,
+                title: 'Spring Festival',
+                date: '2026-03-15',
+                time: '09:00',
+                location: 'City Park',
+                description: 'Help at the festival',
+                volunteersNeeded: 10,
+                volunteers: []
+            }];
             localStorage.setItem('events', JSON.stringify(events));
         }
 
-        function saveArticles() {
+        if (articles.length === 0) {
+            articles = [{
+                id: 1,
+                title: 'Welcome!',
+                content: 'Welcome to our volunteer platform.',
+                authorId: 1,
+                authorName: 'Admin User',
+                date: new Date().toISOString()
+            }];
             localStorage.setItem('articles', JSON.stringify(articles));
         }
 
-        function saveTournaments() {
-            localStorage.setItem('tournaments', JSON.stringify(tournaments));
-        }
-
-        function saveAvailableTournaments() {
-            localStorage.setItem('availableTournaments', JSON.stringify(availableTournaments));
-        }
-
-        // Authentication
         function showLogin() {
             document.getElementById('loginForm').classList.remove('hidden');
             document.getElementById('registerForm').classList.add('hidden');
@@ -677,14 +459,13 @@
         function login() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-
             const user = users.find(u => u.email === email && u.password === password);
             
             if (user) {
                 currentUser = user;
                 showMainApp();
             } else {
-                alert('Invalid credentials. Check the admin credentials shown above the login form.');
+                alert('Invalid credentials');
             }
         }
 
@@ -709,12 +490,11 @@
                 email,
                 password,
                 role: 'volunteer',
-                volunteerHours: 0,
-                signups: []
+                volunteerHours: 0
             };
 
             users.push(newUser);
-            saveUsers();
+            localStorage.setItem('users', JSON.stringify(users));
             currentUser = newUser;
             showMainApp();
         }
@@ -735,7 +515,7 @@
             document.getElementById('mainApp').classList.remove('hidden');
             updateUserInfo();
             updateNavigation();
-            showTab('eventsNewsTab');
+            showTab('news');
         }
 
         function updateUserInfo() {
@@ -757,582 +537,62 @@
 
         function updateNavigation() {
             const navTabs = document.getElementById('navTabs');
-            let tabs = '<div class="nav-tab active" onclick="showTab(\'eventsNewsTab\')">📰 Events & News</div>';
+            let tabs = '<div class="nav-tab active" onclick="showTab(\'news\')">📰 News</div>';
             
             if (currentUser.role === 'volunteer' || currentUser.role === 'administrator') {
-                tabs += '<div class="nav-tab" onclick="showTab(\'volunteerDashboardTab\')">🙋 My Volunteering</div>';
-                tabs += '<div class="nav-tab" onclick="showTab(\'tournamentTab\')">🏆 Tournaments</div>';
+                tabs += '<div class="nav-tab" onclick="showTab(\'volunteer\')">🙋 Volunteering</div>';
             }
             
             if (currentUser.role === 'writer' || currentUser.role === 'administrator') {
-                tabs += '<div class="nav-tab" onclick="showTab(\'writerTab\')">✍️ Writer</div>';
+                tabs += '<div class="nav-tab" onclick="showTab(\'writer\')">✍️ Writer</div>';
             }
             
             if (currentUser.role === 'administrator') {
-                tabs += '<div class="nav-tab" onclick="showTab(\'adminTab\')">⚙️ Admin</div>';
+                tabs += '<div class="nav-tab" onclick="showTab(\'admin\')">⚙️ Admin</div>';
             }
             
             navTabs.innerHTML = tabs;
         }
 
-        function showTab(tabId) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-            
-            // Show selected tab
-            document.getElementById(tabId).classList.remove('hidden');
+        function showTab(tab) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Load content
-            if (tabId === 'eventsNewsTab') loadArticles();
-            if (tabId === 'volunteerDashboardTab') loadVolunteerDashboard();
-            if (tabId === 'tournamentTab') loadTournaments();
-            if (tabId === 'writerTab') loadWriterDashboard();
-            if (tabId === 'adminTab') loadAdminDashboard();
-        }
-
-        // Articles
-        function loadArticles() {
-            const articlesList = document.getElementById('articlesList');
+            const content = document.getElementById('contentArea');
             
-            if (articles.length === 0) {
-                articlesList.innerHTML = '<p style="color: #64748b; text-align: center; padding: 40px;">No articles yet.</p>';
-                return;
-            }
-
-            articlesList.innerHTML = articles.map(article => `
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <div class="card-title">${article.title}</div>
-                            <div class="card-meta">Published on ${new Date(article.date).toLocaleDateString()}</div>
+            if (tab === 'news') {
+                content.innerHTML = '<h2>Latest News</h2>' + 
+                    articles.map(a => `
+                        <div class="card">
+                            <div class="card-title">${a.title}</div>
+                            <div class="card-meta">${new Date(a.date).toLocaleDateString()}</div>
+                            <div class="article-content">${a.content}</div>
+                            <div class="author-info">✍️ By ${a.authorName}</div>
+                        </div>
+                    `).join('');
+            } else if (tab === 'admin') {
+                content.innerHTML = `
+                    <h2>Admin Dashboard</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">${users.length}</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${events.length}</div>
+                            <div class="stat-label">Events</div>
                         </div>
                     </div>
-                    <div class="article-content">${article.content}</div>
-                    <div class="author-info">
-                        <span>✍️ By ${article.authorName}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function openArticleModal() {
-            document.getElementById('articleModal').classList.add('active');
-        }
-
-        function closeArticleModal() {
-            document.getElementById('articleModal').classList.remove('active');
-            document.getElementById('articleTitle').value = '';
-            document.getElementById('articleContent').value = '';
-        }
-
-        function publishArticle() {
-            const title = document.getElementById('articleTitle').value;
-            const content = document.getElementById('articleContent').value;
-
-            if (!title || !content) {
-                alert('Please fill all fields');
-                return;
-            }
-
-            articles.push({
-                id: articles.length + 1,
-                title,
-                content,
-                authorId: currentUser.id,
-                authorName: currentUser.name,
-                date: new Date().toISOString()
-            });
-
-            saveArticles();
-            closeArticleModal();
-            alert('Article published successfully!');
-            loadWriterDashboard();
-        }
-
-        // Volunteer Dashboard
-        function loadVolunteerDashboard() {
-            const user = users.find(u => u.id === currentUser.id);
-            const mySignups = events.filter(e => e.volunteers && e.volunteers.includes(currentUser.id));
-            
-            const statsGrid = document.getElementById('volunteerStats');
-            statsGrid.innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-value">${user.volunteerHours || 0}</div>
-                    <div class="stat-label">Total Hours</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${mySignups.length}</div>
-                    <div class="stat-label">Events Signed Up</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${mySignups.filter(e => new Date(e.date) < new Date()).length}</div>
-                    <div class="stat-label">Events Completed</div>
-                </div>
-            `;
-
-            const mySchedule = document.getElementById('mySchedule');
-            const upcomingEvents = mySignups.filter(e => new Date(e.date) >= new Date());
-            
-            if (upcomingEvents.length === 0) {
-                mySchedule.innerHTML = '<p style="color: #64748b;">No upcoming volunteer events.</p>';
-            } else {
-                mySchedule.innerHTML = upcomingEvents.map(event => `
-                    <div class="volunteer-schedule-item">
-                        <h4>${event.title}</h4>
-                        <p>📅 ${new Date(event.date).toLocaleDateString()} at ${event.time}</p>
-                        <p>📍 ${event.location}</p>
-                        <button class="btn btn-danger" onclick="cancelSignup(${event.id})">Cancel</button>
-                    </div>
-                `).join('');
-            }
-
-            const availableEvents = document.getElementById('availableEvents');
-            const openEvents = events.filter(e => 
-                !e.volunteers.includes(currentUser.id) && 
-                new Date(e.date) >= new Date() &&
-                e.volunteers.length < e.volunteersNeeded
-            );
-
-            if (openEvents.length === 0) {
-                availableEvents.innerHTML = '<p style="color: #64748b;">No available opportunities right now.</p>';
-            } else {
-                availableEvents.innerHTML = openEvents.map(event => `
-                    <div class="event-item">
-                        <div class="event-info">
-                            <h3>${event.title}</h3>
-                            <p>📅 ${new Date(event.date).toLocaleDateString()} at ${event.time} • 📍 ${event.location}</p>
-                            <p>${event.description}</p>
-                            <p style="margin-top: 5px; color: #10b981;">
-                                ${event.volunteers.length}/${event.volunteersNeeded} volunteers signed up
-                            </p>
-                        </div>
-                        <button class="btn btn-success" onclick="signupForEvent(${event.id})">Sign Up</button>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function signupForEvent(eventId) {
-            const event = events.find(e => e.id === eventId);
-            event.volunteers.push(currentUser.id);
-            
-            const user = users.find(u => u.id === currentUser.id);
-            user.volunteerHours = (user.volunteerHours || 0) + 2; // Assume 2 hours per event
-            
-            saveEvents();
-            saveUsers();
-            loadVolunteerDashboard();
-            alert('Successfully signed up for the event!');
-        }
-
-        function cancelSignup(eventId) {
-            const event = events.find(e => e.id === eventId);
-            event.volunteers = event.volunteers.filter(id => id !== currentUser.id);
-            
-            const user = users.find(u => u.id === currentUser.id);
-            user.volunteerHours = Math.max(0, (user.volunteerHours || 0) - 2);
-            
-            saveEvents();
-            saveUsers();
-            loadVolunteerDashboard();
-        }
-
-        // Tournament Management
-        function registerTournament() {
-            const playerName = document.getElementById('playerName').value;
-            const tournamentId = parseInt(document.getElementById('tournamentSelect').value);
-            const skillLevel = document.getElementById('skillLevel').value;
-
-            if (!playerName) {
-                alert('Please enter player name');
-                return;
-            }
-
-            if (!tournamentId) {
-                alert('Please select a tournament');
-                return;
-            }
-
-            const tournament = availableTournaments.find(t => t.id === tournamentId);
-
-            tournaments.push({
-                id: tournaments.length + 1,
-                userId: currentUser.id,
-                userName: currentUser.name,
-                playerName,
-                tournamentId: tournament.id,
-                tournamentName: tournament.name,
-                skillLevel,
-                registeredDate: new Date().toISOString()
-            });
-
-            saveTournaments();
-            alert('Successfully registered for tournament!');
-            loadTournaments();
-        }
-
-        function loadTournaments() {
-            // Populate tournament dropdown
-            const tournamentSelect = document.getElementById('tournamentSelect');
-            if (availableTournaments.length === 0) {
-                tournamentSelect.innerHTML = '<option value="">No tournaments available</option>';
-            } else {
-                tournamentSelect.innerHTML = availableTournaments.map(t => 
-                    `<option value="${t.id}">${t.name} - ${new Date(t.date).toLocaleDateString()}</option>`
-                ).join('');
-            }
-
-            // Show user's registrations
-            const myTournaments = document.getElementById('myTournaments');
-            const userTournaments = tournaments.filter(t => t.userId === currentUser.id);
-
-            if (userTournaments.length === 0) {
-                myTournaments.innerHTML = '<p style="color: #64748b;">No tournament registrations yet.</p>';
-            } else {
-                myTournaments.innerHTML = userTournaments.map(t => `
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">${t.tournamentName}</div>
-                                <div class="card-meta">Player: ${t.playerName} • Level: ${t.skillLevel}</div>
-                            </div>
-                        </div>
-                        <p style="color: #64748b; font-size: 14px;">
-                            Registered on ${new Date(t.registeredDate).toLocaleDateString()}
-                        </p>
-                    </div>
-                `).join('');
-            }
-        }
-
-        // Writer Dashboard
-        function loadWriterDashboard() {
-            const myArticles = document.getElementById('myArticles');
-            const writerArticles = articles.filter(a => a.authorId === currentUser.id);
-
-            if (writerArticles.length === 0) {
-                myArticles.innerHTML = '<p style="color: #64748b;">No articles yet. Write your first one!</p>';
-            } else {
-                myArticles.innerHTML = writerArticles.map(article => `
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">${article.title}</div>
-                                <div class="card-meta">Published on ${new Date(article.date).toLocaleDateString()}</div>
-                            </div>
-                        </div>
-                        <div class="article-content">${article.content.substring(0, 200)}...</div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        // Admin Dashboard
-        function loadAdminDashboard() {
-            document.getElementById('totalUsers').textContent = users.length;
-            document.getElementById('totalEvents').textContent = events.length;
-            document.getElementById('totalArticles').textContent = articles.length;
-
-            // Load events
-            const adminEvents = document.getElementById('adminEvents');
-            if (events.length === 0) {
-                adminEvents.innerHTML = '<p style="color: #64748b;">No events created yet.</p>';
-            } else {
-                adminEvents.innerHTML = events.map(event => `
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">${event.title}</div>
-                                <div class="card-meta">
-                                    ${new Date(event.date).toLocaleDateString()} at ${event.time} • ${event.location}
-                                </div>
-                            </div>
-                            <button class="btn btn-danger" onclick="deleteEvent(${event.id})">Delete</button>
-                        </div>
-                        <p>${event.description}</p>
-                        <p style="color: #10b981; margin-top: 10px;">
-                            ${event.volunteers.length}/${event.volunteersNeeded} volunteers signed up
-                        </p>
-                        ${event.volunteers.length > 0 ? `
-                            <details style="margin-top: 10px;">
-                                <summary style="cursor: pointer; color: #667eea; font-weight: 500;">View Volunteers</summary>
-                                <ul style="margin-top: 10px; padding-left: 20px;">
-                                    ${event.volunteers.map(vId => {
-                                        const volunteer = users.find(u => u.id === vId);
-                                        return `<li>${volunteer ? volunteer.name + ' (' + volunteer.email + ')' : 'Unknown'}</li>`;
-                                    }).join('')}
-                                </ul>
-                            </details>
-                        ` : ''}
-                    </div>
-                `).join('');
-            }
-
-            // Load tournaments
-            const adminTournaments = document.getElementById('adminTournaments');
-            if (availableTournaments.length === 0) {
-                adminTournaments.innerHTML = '<p style="color: #64748b;">No tournaments created yet.</p>';
-            } else {
-                adminTournaments.innerHTML = availableTournaments.map(tournament => {
-                    const registrations = tournaments.filter(t => t.tournamentId === tournament.id);
-                    return `
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">${tournament.name}</div>
-                                <div class="card-meta">
-                                    ${new Date(tournament.date).toLocaleDateString()} • ${tournament.location}
-                                </div>
-                            </div>
-                            <button class="btn btn-danger" onclick="deleteTournament(${tournament.id})">Delete</button>
-                        </div>
-                        <p>${tournament.description}</p>
-                        <p style="color: #10b981; margin-top: 10px;">
-                            ${registrations.length} player${registrations.length !== 1 ? 's' : ''} registered
-                        </p>
-                        <p style="color: #64748b; font-size: 14px;">
-                            Registration deadline: ${new Date(tournament.deadline).toLocaleDateString()}
-                        </p>
-                    </div>
-                `;
-                }).join('');
-            }
-
-            // Load all tournament registrations
-            const allTournamentRegistrations = document.getElementById('allTournamentRegistrations');
-            if (tournaments.length === 0) {
-                allTournamentRegistrations.innerHTML = '<p style="color: #64748b;">No tournament registrations yet.</p>';
-            } else {
-                allTournamentRegistrations.innerHTML = `
+                    <h3>Users</h3>
                     <table>
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Player Name</th>
-                                <th>Tournament</th>
-                                <th>Skill Level</th>
-                                <th>Registration Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tournaments.map(reg => `
-                                <tr>
-                                    <td>${reg.userName} (${users.find(u => u.id === reg.userId)?.email || 'N/A'})</td>
-                                    <td>${reg.playerName}</td>
-                                    <td>${reg.tournamentName}</td>
-                                    <td>${reg.skillLevel}</td>
-                                    <td>${new Date(reg.registeredDate).toLocaleDateString()}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
+                        <tr><th>Name</th><th>Email</th><th>Role</th></tr>
+                        ${users.map(u => `<tr><td>${u.name}</td><td>${u.email}</td><td>${u.role}</td></tr>`).join('')}
                     </table>
                 `;
-            }
-
-            // Load users
-            const usersTable = document.getElementById('usersTable');
-            usersTable.innerHTML = users.map(user => {
-                const userEvents = events.filter(e => e.volunteers && e.volunteers.includes(user.id));
-                const userTournaments = tournaments.filter(t => t.userId === user.id);
-                return `
-                <tr>
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                    <td>${user.role}</td>
-                    <td>${user.volunteerHours || 0} hours</td>
-                    <td>${userEvents.length} events</td>
-                    <td>${userTournaments.length} tournaments</td>
-                    <td>
-                        <select onchange="changeUserRole(${user.id}, this.value)" ${user.id === currentUser.id ? 'disabled' : ''}>
-                            <option value="volunteer" ${user.role === 'volunteer' ? 'selected' : ''}>Volunteer</option>
-                            <option value="writer" ${user.role === 'writer' ? 'selected' : ''}>Writer</option>
-                            <option value="administrator" ${user.role === 'administrator' ? 'selected' : ''}>Administrator</option>
-                        </select>
-                    </td>
-                    <td>
-                        <button class="btn btn-secondary" onclick="resetUserPassword(${user.id})" style="padding: 6px 12px; font-size: 12px;">Reset</button>
-                    </td>
-                </tr>
-            `;
-            }).join('');
-        }
-
-        function resetUserPassword(userId) {
-            const newPassword = prompt('Enter new password for this user:');
-            if (newPassword && newPassword.length >= 6) {
-                const user = users.find(u => u.id === userId);
-                user.password = newPassword;
-                saveUsers();
-                alert(`Password updated successfully!\n\nNew password: ${newPassword}\n\nPlease share this with the user securely.`);
-            } else if (newPassword !== null) {
-                alert('Password must be at least 6 characters long.');
+            } else {
+                content.innerHTML = '<h2>' + tab + ' - Coming soon!</h2>';
             }
         }
-
-        function openTournamentModal() {
-            document.getElementById('tournamentModal').classList.add('active');
-        }
-
-        function closeTournamentModal() {
-            document.getElementById('tournamentModal').classList.remove('active');
-            document.getElementById('newTournamentName').value = '';
-            document.getElementById('newTournamentDate').value = '';
-            document.getElementById('newTournamentLocation').value = '';
-            document.getElementById('newTournamentDescription').value = '';
-            document.getElementById('newTournamentDeadline').value = '';
-        }
-
-        function createTournament() {
-            const name = document.getElementById('newTournamentName').value;
-            const date = document.getElementById('newTournamentDate').value;
-            const location = document.getElementById('newTournamentLocation').value;
-            const description = document.getElementById('newTournamentDescription').value;
-            const deadline = document.getElementById('newTournamentDeadline').value;
-
-            if (!name || !date || !location || !deadline) {
-                alert('Please fill all required fields');
-                return;
-            }
-
-            availableTournaments.push({
-                id: availableTournaments.length + 1,
-                name,
-                date,
-                location,
-                description,
-                deadline,
-                createdBy: currentUser.id
-            });
-
-            saveAvailableTournaments();
-            closeTournamentModal();
-            alert('Tournament created successfully!');
-            loadAdminDashboard();
-        }
-
-        function deleteTournament(tournamentId) {
-            if (confirm('Are you sure you want to delete this tournament? This will also delete all registrations.')) {
-                availableTournaments = availableTournaments.filter(t => t.id !== tournamentId);
-                tournaments = tournaments.filter(t => t.tournamentId !== tournamentId);
-                saveAvailableTournaments();
-                saveTournaments();
-                loadAdminDashboard();
-            }
-        }
-
-        function openEventModal() {
-            document.getElementById('eventModal').classList.add('active');
-        }
-
-        function closeEventModal() {
-            document.getElementById('eventModal').classList.remove('active');
-        }
-
-        function createEvent() {
-            const title = document.getElementById('eventTitle').value;
-            const date = document.getElementById('eventDate').value;
-            const time = document.getElementById('eventTime').value;
-            const location = document.getElementById('eventLocation').value;
-            const description = document.getElementById('eventDescription').value;
-            const volunteersNeeded = parseInt(document.getElementById('volunteersNeeded').value);
-
-            if (!title || !date || !time || !location) {
-                alert('Please fill all required fields');
-                return;
-            }
-
-            events.push({
-                id: events.length + 1,
-                title,
-                date,
-                time,
-                location,
-                description,
-                volunteersNeeded,
-                volunteers: []
-            });
-
-            saveEvents();
-            closeEventModal();
-            alert('Event created successfully!');
-            loadAdminDashboard();
-        }
-
-        function deleteEvent(eventId) {
-            if (confirm('Are you sure you want to delete this event?')) {
-                events = events.filter(e => e.id !== eventId);
-                saveEvents();
-                loadAdminDashboard();
-            }
-        }
-
-        function changeUserRole(userId, newRole) {
-            const user = users.find(u => u.id === userId);
-            user.role = newRole;
-            saveUsers();
-            alert('User role updated successfully!');
-            loadAdminDashboard();
-        }
-
-        // Initialize
-        window.onload = function() {
-            // Create some sample data if empty
-            if (events.length === 0) {
-                events = [
-                    {
-                        id: 1,
-                        title: 'Spring Festival Volunteer',
-                        date: '2026-03-15',
-                        time: '09:00',
-                        location: 'City Park',
-                        description: 'Help set up and manage booths at the annual spring festival.',
-                        volunteersNeeded: 10,
-                        volunteers: []
-                    },
-                    {
-                        id: 2,
-                        title: 'Tournament Registration Desk',
-                        date: '2026-04-20',
-                        time: '08:00',
-                        location: 'Sports Complex',
-                        description: 'Assist with player check-in and registration.',
-                        volunteersNeeded: 5,
-                        volunteers: []
-                    }
-                ];
-                saveEvents();
-            }
-
-            if (articles.length === 0) {
-                articles = [
-                    {
-                        id: 1,
-                        title: 'Upcoming Spring Tournament Details',
-                        content: 'We are excited to announce our Spring Championship 2026! The tournament will feature multiple skill divisions and exciting prizes. Registration is now open for all skill levels. Don\'t miss this opportunity to showcase your talents!',
-                        authorId: 1,
-                        authorName: 'Admin User',
-                        date: new Date().toISOString()
-                    }
-                ];
-                saveArticles();
-            }
-
-            if (availableTournaments.length === 0) {
-                availableTournaments = [
-                    {
-                        id: 1,
-                        name: 'Spring Championship 2026',
-                        date: '2026-04-15',
-                        location: 'Main Arena',
-                        description: 'Annual spring tournament featuring all skill levels',
-                        deadline: '2026-04-01',
-                        createdBy: 1
-                    },
-                    {
-                        id: 2,
-                        name: 'Summer Cup 2026',
-                        date: '2026-07-20',
-                        location: 'Sports Complex',
-                        description: 'Summer tournament with prizes for top performers
+    </script>
+</body>
+</html>
